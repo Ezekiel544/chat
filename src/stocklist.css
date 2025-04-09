@@ -1,0 +1,362 @@
+.container{
+  display: flex;
+
+
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+.stock-container {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+ 
+}
+
+.stock-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.stock-card:hover {
+  transform: translateY(-5px);
+}
+
+.stock-symbol {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.stock-info {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.stock-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #27ae60;
+  margin-top: 10px;
+}
+
+.loading,
+.error {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #e74c3c;
+  margin-top: 20px;
+}
+
+
+@media (max-width: 768px) {
+  .stock-container {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .stock-card {
+    padding: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stock-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stock-card {
+    flex: 1 1 30%;
+    max-width: 350px;
+    margin: 10px;
+  }
+}
+.firstdiv{
+  width: 18%;
+  box-shadow: 0px 4px 10px rgba(148, 144, 144, 0.1);
+  height: 100vh;
+
+    position: fixed;
+    left: 0;  /* Sticks to the left */
+    top: 0;   /* Stays at the top */
+     /* Sidebar width */
+    background-color: #1e293b; /* Dark blue background */
+    color: white;
+    /* padding: 20px; */
+    overflow-y: auto; /* Ensures internal scrolling if needed */
+   /* border: 2px solid red; */
+  
+}
+.pUpdate{
+  color:  #1e293b;
+}
+.seconddiv{
+  /* background-color: red;   */
+  /* border: 2px solid red; */
+  width: 100%;
+  height: 100%;
+}
+.zabbixDIv{
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+  
+}
+.zabbix{
+  width: 30%;
+  /* border-radius: 70px; */
+  /* text-decoration: underline; */
+ 
+}
+ul{
+  /* border: 2px solid red; */
+  height:50%;
+ padding: 0px;
+ padding-left: 10px;
+ display: flex;
+  flex-direction: column;
+justify-content: space-between;
+}
+ul a{
+  display: block;
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 18px;
+  
+}
+ul a:hover{
+  color: #f97316;
+}
+.dashboard{
+  color: #f97316;
+}
+.roundedDiv{
+  border: 2px solid #f97316;
+  background-color: #f97316;
+  border-radius: 10px;
+  padding-top: 20px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.roundedcircle{
+  width: 50px; 
+  height: 50px; 
+  background-color: #1e293b; 
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.secondcircle{
+  width: 20px; 
+  height: 20px; 
+  background-color: #f97316; 
+  border-radius: 50%;
+}
+
+.roundedDiv p{
+  font-family: sans-serif;
+  color: white;
+  font-size: 18px;
+  margin-top: 17px;
+  text-align: center;
+}
+.roundedDiv .pUpdate{
+  color:  white;
+  font-size: 13px;
+   text-align: center;
+   line-height: 30px;
+
+}
+.roundedDiv .pUpdateSecond{
+  color:  white;
+}
+/* Container for input and button */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 10px;
+  /* width: 300px; */
+}
+.roundedDiv .keepSafe{
+  color: white;
+}
+/* Search Input */
+.search-input {
+  width: 70%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+  outline: none;
+}
+
+/* Input Focus & Hover */
+.search-input:hover,
+.search-input:focus {
+  border-color: #1e293b; /* Blue border on hover/focus */
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* Soft blue shadow */
+}
+
+/* Search Button */
+.search-button {
+  background-color: #385d99; /* Primary blue */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin: 0px 5px;
+  
+}
+
+/* Button Hover Effect */
+.search-button:hover {
+  background-color: #0c1930; /* Darker blue */
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  transform: scale(1.05); /* Slightly enlarges button */
+}
+
+.general-contain{
+  /* border: 2px solid blue; */
+  display: flex;
+}
+.market-container {
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: center; */
+  gap: 20px;
+  /* padding: 20px; */
+  width: 81%;
+  /* border: 2px solid red; */
+  margin-left: auto;
+}
+
+.market-card {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 20px;
+  background: #1e293b; /* Dark gray background */
+  color: white;
+  text-align: center;
+  flex: 1 1 calc(33.333% - 40px); /* Three items per row */
+  max-width: 300px; /* Prevent cards from being too wide */
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  border: 2px solid green;
+  
+}
+
+.market-card:hover {
+  transform: scale(1.05);
+  border-color: #38bdf8; /* Highlight border on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .market-card {
+    flex: 1 1 calc(50% - 40px); /* Two items per row */
+  }
+}
+@media (max-width: 991px) {
+.firstdiv{
+  display: none;
+}
+}
+@media (max-width: 768px) {
+  .market-card {
+    flex: 1 1 100%; /* Stack cards in a single column */
+  }
+}
+.keepSafe{
+  color: #1e293b;
+}
+.search{
+   width: 75%;
+  /* border: none;
+  text-align: center;  */
+  
+
+  position: fixed;
+  /* top: 10px; */
+  left: 60%;
+  transform: translateX(-50%); /* Center it horizontally */
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  z-index: 1000; 
+}
+.empty{
+  width: 100%;
+  /* border: 1px solid red; */
+  margin-top: 60px;
+}
+/* .search-input {
+  padding: 10px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  outline: none;
+  background: #ffffff;
+  color: #1e293b;
+  width: 250px;
+  margin-right: 10px;
+}
+
+.search-button {
+  padding: 10px 15px;
+  border: none;
+  background: #38bdf8; /* Nice blue */
+  /* color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}  */
+.Container-div {
+  width: 100%;
+  max-width: 700px;
+  height: 400px;
+  margin: auto;
+  padding: 20px;
+  background: #1e293b;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.market-chart-container {
+  background-color: #ffffff; /* White background for contrast */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Padding for spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  max-width: 800px; /* Limit maximum width */
+  margin: 20px auto; /* Center the chart horizontally */
+}
+
+.chart-title {
+  font-size: 24px; /* Increase font size */
+  font-weight: bold;
+  text-align: center; /* Center the title */
+  color: #333; /* Darker color for the title */
+  margin-bottom: 16px; /* Space below the title */
+}
+
+.chart-wrapper {
+  position: relative; /* Positioning context for future use */
+  height: 400px; /* Fixed height for better responsiveness */
+}
