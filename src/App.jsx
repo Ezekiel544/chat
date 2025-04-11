@@ -11,10 +11,10 @@
 ;
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Chat from './chatapp/chat.jsx';
-import SignIn from './chatapp/signin.jsx';
-import SignUp from './chatapp/signup.jsx';
-import Auth from './chatapp/auth';
+import Chat from '../chatapp/chat.jsx';
+import SignIn from '../chatapp/signin.jsx';
+import SignUp from '../chatapp/signup.jsx';
+import Auth from '../chatapp/auth.jsx';
 
 const App = () => {
   return (
