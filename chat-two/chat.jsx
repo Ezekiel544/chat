@@ -10,6 +10,11 @@ import EmojiPicker from "emoji-picker-react";
 import { faSmile } from "@fortawesome/free-solid-svg-icons";
 import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { FaSun, FaMoon } from "react-icons/fa";  // Importing the icons here problem
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faVideo, faPhone, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import {  faPaperclip } from "@fortawesome/free-solid-svg-icons";
+
+
 import "./login.css";
   
 
@@ -29,6 +34,19 @@ const [contextMenu, setContextMenu] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 const [selectedMessage, setSelectedMessage] = useState(null);
 const [isDarkMode, setIsDarkMode] = useState(false);
+const [showDropdown, setShowDropdown] = useState(false);
+const [chatBackground, setChatBackground] = useState("#8A2BE2"); // default
+const [replyTo, setReplyTo] = useState(null);
+
+const handleReply = (message) => {
+  setReplyTo(message);
+};
+
+
+const handleFileUpload = (e) => {
+  const files = e.target.files;
+  console.log("Selected files:", files); // Replace with upload logic
+};
 
 
 const emojiPickerRef = useRef(null);
@@ -163,6 +181,7 @@ const handleEditMessage = (msg) => {
     }
 
     setMessage("");
+    setReplyToMessage(null); // ✅ clear reply after sending
 };
 
 
@@ -344,13 +363,14 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   style={{
     width: isMobile ? (selectedUser ? "0px" : "100%") : "320px",
     minWidth: isMobile ? (selectedUser ? "0px" : "100%") : "320px",
-    background: "#e3eaf0",
+    background: " #303A40",
     borderRight: isMobile ? "none" : "1px solid #ccc",
     display: isMobile && selectedUser ? "none" : "block",
     transition: "width 0.3s ease-in-out",
     height: "100vh",
     overflowY: "auto",
     boxSizing: "border-box", 
+    color : 'white'
     
   }}
 >
@@ -358,22 +378,57 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     style={{
       position: "sticky",
       top: 0,
-      background: "#e3eaf0",
+      background: "#202A30",
       zIndex: 10, // higher than list
       padding: "10px", // add this for spacing inside
       borderBottom: "1px solid #ccc",
       margin: 0, // remove any margin
+
+     
     }}
   >
+    <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    padding: "10px",
+    // background: "#f0f0f0",
+  }}
+>
+  <div
+    style={{
+      width: "40px",
+      height: "40px",
+      borderRadius: "50%",
+      backgroundColor: user.photoURL ? "transparent" : getUserColor(user.uid),
+      backgroundImage: user.photoURL ? `url(${user.photoURL})` : "none",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      marginRight: "10px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#fff",
+      fontWeight: "bold",
+    }}
+  >
+    {!user.photoURL && (user.email[0] || "Y").toUpperCase()}
+  </div>
+  <div>
+    <strong>YOU</strong>
+    {/* <div style={{ fontSize: "12px", color: "#555" }}>{user.email}</div> */}
+  </div>
+</div>
           
         <input
         type="text"
         placeholder="Search users..."
         value={search}
         onChange={(e) => setSearch(e.target.value.toLowerCase())}
-        style={{ width: "100%", padding: "5px", borderRadius: "5px", border: "1px solid #ccc" , background : 'white'}}
+        style={{ width: "100%", padding: "5px", borderRadius: "5px", border: "1px solid #ccc" , background : 'white' , color : 'black'}}
       />
       <h3>Users </h3>
+      
     </div>
 
         
@@ -398,37 +453,38 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
           padding: "8px",
           borderRadius: "5px",
           cursor: "pointer",
-          background: selectedUser?.id === u.id ? "#ddd" : "transparent",
-          borderBottom: "1px solid #ccc",
+          background: selectedUser?.id === u.id ? "rgba(255, 255, 255, 0.1)" : "transparent",
+
         }}
         onClick={() => setSelectedUser(u)}
       >
-        <div
-          style={{
-            width: "40px",
-            height: "40px",
-            borderRadius: "50%",
-            background: userColor,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "16px",
-            marginRight: "10px",
-            overflow: "hidden",
-          }}
-        >
-          {hasProfileImage ? (
-            <img
-              src={u.photoURL}
-              alt="Profile"
-              style={{ width: "100%", height: "100%", borderRadius: "50%" }}
-            />
-          ) : (
-            firstName.charAt(0).toUpperCase()
-          )}
-        </div>
+     <div
+  style={{
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    background: hasProfileImage ? "transparent" : userColor,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: "16px",
+    marginRight: "10px",
+    overflow: "hidden",
+  }}
+>
+  {u.photoURL ? (
+    <img
+      src={u.photoURL}
+      alt="Profile"
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+  ) : (
+    (u.name || u.email || "").charAt(0).toUpperCase()
+  )}
+</div>
+
 
         <p style={{ fontWeight: u.id === user.uid ? "bold" : "normal" }}>
           {firstName} {u.id === user.uid ? "(You)" : ""}
@@ -448,7 +504,10 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     height: "100vh",
     width: "100%",
     flexDirection: "column" ,
-    background:  "#b3dfe5", 
+    // background:  "#008080 #3F3F4F #8A2BE2 #48D1CC #F0F8FF #E0E0E0 #D8BFD8 #182024 #2F4F4F #5F9EA0 #8b674d  #c15f2e #375A5A", 
+    // background:  " #8A2BE2", 
+    background: chatBackground,
+    
   }}
 >
 
@@ -458,18 +517,19 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   <div
     style={{
       display: "flex",
-      justifyContent: "start",
+      // justifyContent: "start",
       alignItems: "center",
       gap : '5px' ,
-      padding: "4px 10px",
+      padding: window.innerWidth >= 768 ? "4px 10px" : "0px 7px",
       fontSize: isMobile ? "16px" : "18px",
       flexShrink: 0,
       position: "sticky",
       top: 0,
       zIndex: 10,
-      paddingTop : '14px',
-      background: "#e3eaf0",
-      color: "#000",
+      paddingTop: window.innerWidth >= 768 ? "14px" : "0px",
+      background: " #303A40",
+      color: "white", 
+      // border :'2px solid red'
     }}
    className="top-icon-div">
      {selectedUser && isMobile && (
@@ -491,7 +551,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     <FaArrowLeft />
   </button>
   )}
-   <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+   <span style={{ display: "flex", alignItems: "center", gap: "4px"  , width:'100%'}}>
   {selectedUser && (
    <div className="mobile-avatar">
   <div
@@ -509,7 +569,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       textTransform: "uppercase",
       flexShrink: 0,
       overflow: "hidden",
-      marginTop :'17px'
+      marginTop :'17px' ,
+      
       
     }}
   >
@@ -532,11 +593,85 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
   )}
 
-  {selectedUser ? (
-    selectedUser.name || selectedUser.email.split("@")[0]
-  ) : (
-    "Select a user to chat"
+ <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    // alignItems: "center",
+    color: "#fff",
+    width : '100%',
+    marginTop: window.innerWidth <= 768 ? "12px" : "0px", // Only on small screens
+  }}
+>
+  {/* User name or placeholder */}
+  <div style={{ fontWeight: "bold", fontSize: "16px" , }} >
+    {selectedUser
+      ? selectedUser.name || selectedUser.email.split("@")[0]
+      : "Select a user to chat"}
+  </div>
+
+  {/* Icons section */}
+  {selectedUser && (
+    <div style={{ display: "flex", alignItems: "center", gap: window.innerWidth <= 768 ? "14px" : "30px",}}>
+      <FontAwesomeIcon icon={faVideo} style={{ cursor: "pointer" , fontSize: "15px"  }} title="Video Call" />
+      <FontAwesomeIcon icon={faPhone} style={{ cursor: "pointer" , fontSize: "15px" }} title="Voice Call" />
+      <span style={{ position: "relative" }}>
+  <FontAwesomeIcon
+    icon={faEllipsisV}
+    style={{ cursor: "pointer", fontSize: "15px" }}
+    title="More Options"
+    onClick={() => setShowDropdown((prev) => !prev)}
+  />
+
+{showDropdown && (
+  <div
+    style={{
+      position: "absolute",
+      top: "25px",
+      right: 0,
+      background: "#fff",
+      border: "1px solid #ccc",
+      borderRadius: "5px",
+      padding: "10px",
+      zIndex: 1000,
+      width: "160px",
+      display: "flex",
+      flexWrap: "wrap", // 👈 allows wrapping
+      gap: "8px",
+      boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
+    }}
+  >
+    {[
+      "#008080", "#3F3F4F", "#8A2BE2", "#48D1CC",
+       "#D8BFD8", "#182024", "#2F4F4F", "#5F9EA0",
+      "#4A3B30", "#604A3F", "#375A5A",
+    ].map((color) => (
+      <button
+        key={color}
+        onClick={() => {
+          setChatBackground(color);
+          setShowDropdown(false);
+        }}
+        style={{
+          width: "30px",
+          height: "30px",
+          background: color,
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      />
+    ))}
+  </div>
+)}
+
+
+</span>
+
+    </div>
   )}
+</div>
+
 </span>
   </div>
 
@@ -571,28 +706,109 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   </div>
 )}
 
+{selectedUser && messages.length === 0 && (
+  <div
+    style={{
+      flex: 1,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+      padding: "20px",
+      flexDirection: "column",
+      animation: "fadeIn 0.6s ease-in-out",
+    }}
+  >
+    <div style={{ fontSize: "40px", marginBottom: "10px" }}>👋</div>
 
-{messages.map((msg) => {
-  {messages.map((msg) => (
-    <div
-      key={msg.id}
-      onContextMenu={(e) => handleRightClick(e, msg)}
-      onTouchStart={(e) => handleTouchStart(e, msg)}
-      onTouchEnd={handleTouchEnd}
+    <p
       style={{
-        padding: "10px",
-        margin: "5px",
-        borderRadius: "10px",
-        background: msg.senderId === user.uid ? "#DCF8C6" : "#FFFFFF",
-        maxWidth: "80%",
-        wordWrap: "break-word",
-        cursor: "pointer",
-        alignSelf: msg.senderId === user.uid ? "flex-end" : "flex-start",
+        fontSize: window.innerWidth <= 480 ? "16px" : "20px",
+        color: "#888",
+        lineHeight: 1.5,
       }}
     >
-      {msg.message}
-    </div>
-  ))}
+      Say hi to{" "}
+      <strong style={{ color: "#fff" }}>
+        {selectedUser.name?.split(" ")[0] || selectedUser.email}
+      </strong>
+    </p>
+
+    {/* Optional subtext */}
+    <p
+      style={{
+        fontSize: "14px",
+        color: "#aaa",
+        marginTop: "5px",
+      }}
+    >
+      Start a conversation
+    </p>
+
+    {/* Keyframes for animation */}
+    <style>
+      {`
+        @keyframes fadeIn {
+          0% { opacity: 0; transform: scale(0.95); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+      `}
+    </style>
+  </div>
+)}
+
+
+{messages.map((msg) => {
+{messages.map((msg) => (
+  <div
+    key={msg.id}
+    onContextMenu={(e) => handleRightClick(e, msg)}
+    onTouchStart={(e) => {
+      e.target.startX = e.touches[0].clientX;
+      handleTouchStart(e, msg); // existing long press support
+    }}
+    onTouchEnd={(e) => {
+      const endX = e.changedTouches[0].clientX;
+      const startX = e.target.startX || 0;
+
+      if (startX - endX > 50) {
+        handleReply(msg); // ✅ swipe to reply
+      } else {
+        handleTouchEnd(e); // keep long press working
+      }
+    }}
+    style={{
+      padding: "10px",
+      margin: "5px",
+      borderRadius: "10px",
+      background: msg.senderId === user.uid ? "#DCF8C6" : "#FFFFFF",
+      maxWidth: "80%",
+      wordWrap: "break-word",
+      cursor: "pointer",
+      alignSelf: msg.senderId === user.uid ? "flex-end" : "flex-start",
+    }}
+  >
+    {/* 🔁 Show replied-to message preview */}
+  {/* ✅ If it's a reply, show the original message preview */}
+  {msg.replyTo && (
+      <div
+        style={{
+          fontSize: "12px",
+          color: "#555",
+          marginBottom: "4px",
+          borderLeft: "3px solid #007bff",
+          paddingLeft: "6px",
+        }}
+      >
+        Replying to: <i>{msg.replyTo}</i>
+      </div>
+    )}
+    {/* 💬 Actual message content */}
+    {msg.message}
+  </div>
+))}
+
+
     const messageTime = msg.timestamp
         ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
         : "Just now";
@@ -625,7 +841,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
             {msg.edited && ( // ✅ Show "Edited" if the message was modified
                 <p style={{ fontSize: "10px", color: "#888", marginTop: "2px" }}>Edited</p>
             )}
-            <p style={{ fontSize: "12px", color: "#666", marginTop: "5px", textAlign: "right" }}>
+            <p style={{ fontSize: "10px", color: "#666", marginTop: "0px", textAlign: "right" }}>
                 {messageTime}
             </p>
         </div>
@@ -673,97 +889,162 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
 
   {/* Fixed Input Section */}
-  {selectedUser && (
+     {selectedUser && (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      padding: "10px",
+      borderTop: "1px solid #ccc",
+      position: "sticky",
+      bottom: 0,
+      background: "#303A40",
+      zIndex: 10,
+      marginBottom: "0px",
+      flexWrap: "nowrap",
+      width: "100%",
+      boxSizing: "border-box",
+       position: "relative", // Required for send button absolute positioning
+    }}
+  >
+
+
+  
+    {showEmojiPicker && (
+      <div
+        ref={emojiPickerRef}
+        style={{
+          position: "absolute",
+          bottom: window.innerWidth <= 480 ? "70px" : "60px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1000,
+          backgroundColor: "#fff",
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+          boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+          width: window.innerWidth <= 480 ? "90vw" : "auto",
+          maxHeight: "250px",
+          overflowY: "auto",
+        }}
+      >
+        <EmojiPicker
+          onEmojiClick={(emoji) => {
+            setMessage((prev) => prev + emoji.emoji);
+            setShowEmojiPicker(false);
+          }}
+        />
+      </div>
+    )}
+
+
+    {/* Input wrapper for icons and responsiveness */}
     <div
       style={{
-        display: "flex",
-        alignItems: "center",
-        padding: "10px",
-        borderTop: "1px solid #ccc",
-        position: "sticky",
-        bottom: 0,
-        background: "#e3eaf0",
-        zIndex: 10,
-        marginBottom: "0px",          // ✅ Remove any bottom margin
-        flexWrap: "nowrap",           // ✅ Prevent overflow/wrap
-        width: "100%",                // ✅ Limit it to parent container
-        boxSizing: "border-box",
+        position: "relative",
+        flex: 1,
+        width: "100%",
       }}
     >
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // Prevents newline if using textarea
+            handleSendOrUpdateMessage();
+          }
+        }}
+        placeholder="Type a message..."
+        style={{
+          width: "100%",
+          background: "white",
+          paddingLeft: "60px",
+          paddingRight: "60px",
+          paddingTop: "10px",
+          paddingBottom: "10px",
+          borderRadius: "10px",
+          border: "1px solid #ccc",
+          fontSize: window.innerWidth <= 768 ? "16px" : "14px",
+          outline: "none",
+        }}
+      />
+
+      {/* Emoji icon (left inside input) */}
       <button
         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
         style={{
-          border: "none",
-          cursor: "pointer",
-          fontSize: "20px",
-          marginRight: "10px",
+          position: "absolute",
+          left: "24px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          background: "none",
+          fontSize: "18px",
           color: "gray",
-          background : 'none'
+          cursor: "pointer",
+          padding: 0,
+          
         }}
       >
         <FontAwesomeIcon icon={faSmile} />
       </button>
-
-      {showEmojiPicker && (
-     <div ref={emojiPickerRef}
-     style={{
-       position: "absolute",
-       bottom: window.innerWidth <= 480 ? "70px" : "60px", // ✅ Adjust bottom position for mobile
-       left: "50%",
-       transform: "translateX(-50%)",
-       zIndex: 1000,
-       backgroundColor: "#fff",
-       border: "1px solid #ccc",
-       borderRadius: "10px",
-       boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
-       width: window.innerWidth <= 480 ? "90vw" : "auto", // ✅ Prevents overflow
-       maxHeight: "250px", // ✅ Prevents too much space usage
-       overflowY: "auto", // ✅ Allows scrolling when too many emojis
-     }}
-   >
-     <EmojiPicker
-       onEmojiClick={(emoji) => {
-         setMessage((prev) => prev + emoji.emoji);
-         setShowEmojiPicker(false);
-       }}
-     />
-   </div>
-     
-      )}
-
-<input
-    type="text"
-    value={message}
-    onChange={(e) => setMessage(e.target.value)}
-    placeholder="Type a message..."
-    style={{
-      background: 'white' ,
-        flex: 1,
-        padding: "10px",
-        borderRadius: "5px",
-        border: "1px solid #ccc",
-        width: window.innerWidth <= 768 ? "90%" : "auto", // ✅ Wider on small screens
-        fontSize: window.innerWidth <= 768 ? "16px" : "14px", // ✅ Bigger text for better readability
-    }}
-/>
-
-
-<button
-    onClick={handleSendOrUpdateMessage} // Use the correct function
-    style={{
-        padding: "10px 15px",
-        background: "#007bff",
-        color: "white",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-    }}
+ 
+ {/* 📎 Paperclip Icon for File Upload (Left side of input) */}
+<label
+  htmlFor="fileUpload"
+  style={{
+    position: "absolute",
+    left: "10px",
+    top: "48%",
+    transform: "translateY(-50%)",
+    background: "none",
+    fontSize: "18px",
+    color: "gray",
+    cursor: "pointer",
+    padding: 0,
+  }}
 >
-    <FontAwesomeIcon icon={faPaperPlane} />
-</button>
+  <FontAwesomeIcon icon={faPaperclip} />
+  <input
+    id="fileUpload"
+    type="file"
+    style={{ display: "none" }}
+    multiple
+    onChange={handleFileUpload}
+  />
+</label>
 
+
+
+
+
+      {/* Send button (right inside input) */}
+      <button
+        onClick={handleSendOrUpdateMessage}
+        style={{
+          position: "absolute",
+          right: "10px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          border: "none",
+          background: "none",
+          fontSize: "18px",
+          color: "#007bff",
+          cursor: "pointer",
+          padding: 0,
+        }}
+        
+      >
+        <FontAwesomeIcon icon={faPaperPlane} 
+         style={{
+          transform: "rotate(38deg)", // 👈 Perfect Telegram-style angle
+        }}/>
+      </button>
     </div>
-  )}
+  </div>
+)} 
+
   </div>
     </div>
   );
