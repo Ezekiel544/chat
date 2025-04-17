@@ -112,7 +112,18 @@ const handleTouchEnd = (event) => {
     });
   };
   
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const heightDiff = window.innerHeight < window.outerHeight - 100;
+      setIsKeyboardOpen(heightDiff);
+    };
+  
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   // Function to handle deleting a message
   const handleDeleteClick = (msgId) => {
     setConfirmDelete(msgId); // Show delete confirmation for the selected message
@@ -691,6 +702,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
    padding: "10px",
    display: "flex",
    flexDirection: "column",
+  //  border : '2px solid red',
+   paddingBottom: isKeyboardOpen ? "300px" : "80px", // Enough room for keyboard/input
  }}
 >
   {!selectedUser && !isMobile && (
@@ -900,7 +913,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       alignItems: "center",
       padding: "10px",
       borderTop: "1px solid #ccc",
-      position: "sticky",
+      position: "fixed",
       bottom: 0,
       background: "#303A40",
       zIndex: 10,
