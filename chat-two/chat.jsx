@@ -38,6 +38,7 @@ const [showDropdown, setShowDropdown] = useState(false);
 const [chatBackground, setChatBackground] = useState("#8A2BE2"); // default
 const [replyTo, setReplyTo] = useState(null);
 
+
 const handleReply = (message) => {
   setReplyTo(message);
 };
@@ -50,6 +51,9 @@ const handleFileUpload = (e) => {
 
 
 const emojiPickerRef = useRef(null);
+useEffect(() => {
+  window.dispatchEvent(new Event('resize'));
+}, []);
 
 useEffect(() => {
   function handleClickOutside(event) {
@@ -427,7 +431,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
         onChange={(e) => setSearch(e.target.value.toLowerCase())}
         style={{ width: "100%", padding: "5px", borderRadius: "5px", border: "1px solid #ccc" , background : 'white' , color : 'black'}}
       />
-      <h3>Users </h3>
+      <h3 >Users </h3>
       
     </div>
 
@@ -612,7 +616,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
   {/* Icons section */}
   {selectedUser && (
-    <div style={{ display: "flex", alignItems: "center", gap: window.innerWidth <= 768 ? "14px" : "30px",}}>
+    <div style={{ display: "flex", alignItems: "center", gap: window.innerWidth <= 768 ? "14px" : "30px", paddingRight:window.innerWidth <= 768 ? "14px" : "0px",}}>
       <FontAwesomeIcon icon={faVideo} style={{ cursor: "pointer" , fontSize: "15px"  }} title="Video Call" />
       <FontAwesomeIcon icon={faPhone} style={{ cursor: "pointer" , fontSize: "15px" }} title="Voice Call" />
       <span style={{ position: "relative" }}>
