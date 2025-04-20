@@ -10,22 +10,24 @@
 // import Chat from "./chatapp/chat";
 ;
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Chat from '../chat-two/chat.jsx';
-import SignIn from '../chat-two/signin.jsx';
-import SignUp from '../chat-two/signup.jsx';
-import Auth from '../chat-two/auth.jsx';
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import Chat from '../chat-two/chat.jsx';
+// import SignIn from '../chat-two/signin.jsx';
+// import SignUp from '../chat-two/signup.jsx';
+// import Auth from '../chat-two/auth.jsx';
+import Port from './porfolio/appforlio'
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Auth />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/chat" element={<Chat />} />
-      </Routes>
-    </Router>
+    // <Router>
+    //   <Routes>
+    //     <Route path="/" element={<Auth />} />
+    //     <Route path="/signin" element={<SignIn />} />
+    //     <Route path="/signup" element={<SignUp />} />
+    //     <Route path="/chat" element={<Chat />} />
+    //   </Routes>
+    // </Router>
+    <Port/>
   );
 };
 
