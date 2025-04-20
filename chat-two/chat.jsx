@@ -956,6 +956,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
 
     {/* Input wrapper for icons and responsiveness */}
+    <div>
     <div
       style={{
         position: "relative",
@@ -1059,10 +1060,13 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
         }}/>
       </button>
     </div>
+    </div>
   </div>
 )} 
 
   </div>
+
+  
     </div>
   );
 };
