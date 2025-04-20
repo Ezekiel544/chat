@@ -926,6 +926,110 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   >
 
 
+    <div
+      style={{
+        position: "relative",
+        flex: 1,
+        width: "100%",
+      }}
+    >
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // Prevents newline if using textarea
+            handleSendOrUpdateMessage();
+          }
+        }}
+        placeholder="Type a message..."
+        style={{
+          width: "100%",
+          background: "white",
+          paddingLeft: "60px",
+          paddingRight: "60px",
+          paddingTop: "10px",
+          paddingBottom: "10px",
+          borderRadius: "10px",
+          border: "1px solid #ccc",
+          fontSize: window.innerWidth <= 768 ? "16px" : "14px",
+          outline: "none",
+        }}
+      />
+
+      {/* Emoji icon (left inside input) */}
+      <button
+        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+        style={{
+          position: "absolute",
+          left: "24px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          background: "none",
+          fontSize: "18px",
+          color: "gray",
+          cursor: "pointer",
+          padding: 0,
+          
+        }}
+      >
+        <FontAwesomeIcon icon={faSmile} />
+      </button>
+ 
+ {/* 📎 Paperclip Icon for File Upload (Left side of input) */}
+<label
+  htmlFor="fileUpload"
+  style={{
+    position: "absolute",
+    left: "10px",
+    top: "48%",
+    transform: "translateY(-50%)",
+    background: "none",
+    fontSize: "18px",
+    color: "gray",
+    cursor: "pointer",
+    padding: 0,
+  }}
+>
+  <FontAwesomeIcon icon={faPaperclip} />
+  <input
+    id="fileUpload"
+    type="file"
+    style={{ display: "none" }}
+    multiple
+    onChange={handleFileUpload}
+  />
+</label>
+
+
+
+
+
+      {/* Send button (right inside input) */}
+      <button
+        onClick={handleSendOrUpdateMessage}
+        style={{
+          position: "absolute",
+          right: "10px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          border: "none",
+          background: "none",
+          fontSize: "18px",
+          color: "#007bff",
+          cursor: "pointer",
+          padding: 0,
+        }}
+        
+      >
+        <FontAwesomeIcon icon={faPaperPlane} 
+         style={{
+          transform: "rotate(38deg)", // 👈 Perfect Telegram-style angle
+        }}/>
+      </button>
+    </div>
+   
 
 
 
@@ -938,8 +1042,6 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 )} 
 
   </div>
-
-  
     </div>
   );
 };
