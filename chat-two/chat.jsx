@@ -924,6 +924,32 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
        position: "relative", // Required for send button absolute positioning
     }}
   >
+    {showEmojiPicker && (
+      <div
+        ref={emojiPickerRef}
+        style={{
+          position: "absolute",
+          bottom: window.innerWidth <= 480 ? "70px" : "60px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1000,
+          backgroundColor: "#fff",
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+          boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+          width: window.innerWidth <= 480 ? "90vw" : "auto",
+          maxHeight: "250px",
+          overflowY: "auto",
+        }}
+      >
+        <EmojiPicker
+          onEmojiClick={(emoji) => {
+            setMessage((prev) => prev + emoji.emoji);
+            setShowEmojiPicker(false);
+          }}
+        />
+      </div>
+    )}
 
 
     <div
@@ -958,6 +984,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
         }}
       />
 
+
+
       {/* Emoji icon (left inside input) */}
       <button
         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
@@ -983,7 +1011,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   style={{
     position: "absolute",
     left: "10px",
-    top: "48%",
+    top: "50%",
     transform: "translateY(-50%)",
     background: "none",
     fontSize: "18px",
