@@ -956,6 +956,175 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
 
   {/* Fixed Input Section */}
+     {selectedUser && (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      padding: "10px",
+      borderTop: "1px solid #ccc",
+      position: "fixed",
+      bottom: 0,
+      background: "#303A40",
+      zIndex: 10,
+      marginBottom: "10px",
+      flexWrap: "nowrap",
+      width: "100%",
+      boxSizing: "border-box",
+       position: "relative", // Required for send button absolute positioning
+       border : '2px solid red'
+    }}
+  >
+    {/* {showEmojiPicker && (
+      <div
+        ref={emojiPickerRef}
+        style={{
+          position: "absolute",
+          bottom: window.innerWidth <= 480 ? "70px" : "60px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1000,
+          backgroundColor: "#fff",
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+          boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+          width: window.innerWidth <= 480 ? "90vw" : "auto",
+          maxHeight: "250px",
+          overflowY: "auto",
+        }}
+      >
+        <EmojiPicker
+          onEmojiClick={(emoji) => {
+            setMessage((prev) => prev + emoji.emoji);
+            setShowEmojiPicker(false);
+          }}
+        />
+      </div>
+    )} */}
+
+
+    <div
+      style={{
+        position: "relative",
+        flex: 1,
+        width: "100%",
+      }}
+    >
+    {/* <input
+  type="text"
+  value={messagesPerUser[selectedUser?.id] || ""}
+  onChange={(e) =>
+    setMessagesPerUser((prev) => ({
+      ...prev,
+      [selectedUser.id]: e.target.value,
+    }))
+  }
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendOrUpdateMessage();
+    }
+  }}
+  placeholder="Type a message..."
+  style={{
+    width: "100%",
+    background: "white",
+    paddingLeft: "60px",
+    paddingRight: "60px",
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    fontSize: window.innerWidth <= 768 ? "16px" : "14px",
+    outline: "none",
+  }}
+/> */}
+
+
+
+
+      {/* Emoji icon (left inside input) */}
+      {/* <button
+        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+        style={{
+          position: "absolute",
+          left: "24px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          background: "none",
+          fontSize: "18px",
+          color: "gray",
+          cursor: "pointer",
+          padding: 0,
+          
+        }}
+      >
+        <FontAwesomeIcon icon={faSmile} />
+      </button> */}
+ 
+ {/* 📎 Paperclip Icon for File Upload (Left side of input) */}
+{/* <label
+  htmlFor="fileUpload"
+  style={{
+    position: "absolute",
+    left: "10px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    background: "none",
+    fontSize: "18px",
+    color: "gray",
+    cursor: "pointer",
+    padding: 0,
+  }}
+>
+  <FontAwesomeIcon icon={faPaperclip} />
+  <input
+    id="fileUpload"
+    type="file"
+    style={{ display: "none" }}
+    multiple
+    onChange={handleFileUpload}
+  />
+</label> */}
+
+
+
+
+
+      {/* Send button (right inside input) */}
+      {/* <button
+        onClick={handleSendOrUpdateMessage}
+        style={{
+          position: "absolute",
+          right: "10px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          border: "none",
+          background: "none",
+          fontSize: "18px",
+          color: "#007bff",
+          cursor: "pointer",
+          padding: 0,
+        }}
+        
+      >
+        <FontAwesomeIcon icon={faPaperPlane} 
+         style={{
+          transform: "rotate(38deg)", // 👈 Perfect Telegram-style angle
+        }}/>
+      </button> */}
+    </div>
+   
+
+
+
+
+      {/* Send button (right inside input) */}
+  
+    </div>
+  //   </div>
+  // </div>
+)} 
 
   </div>
     </div>
