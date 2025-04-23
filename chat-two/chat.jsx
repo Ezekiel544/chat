@@ -967,7 +967,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       bottom: 0,
       background: "#303A40",
       zIndex: 10,
-      marginBottom: "0px",
+      marginBottom: "10px",
       flexWrap: "nowrap",
       width: "100%",
       boxSizing: "border-box",
