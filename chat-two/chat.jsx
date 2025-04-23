@@ -23,7 +23,7 @@ const [contextMenu, setContextMenu] = useState(null);
  const [editMessage, setEditMessage] = useState(null);
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+  const [messagesPerUser, setMessagesPerUser] = useState({});
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -36,12 +36,20 @@ const [selectedMessage, setSelectedMessage] = useState(null);
 const [isDarkMode, setIsDarkMode] = useState(false);
 const [showDropdown, setShowDropdown] = useState(false);
 const [chatBackground, setChatBackground] = useState("#8A2BE2"); // default
-const [replyTo, setReplyTo] = useState(null);
+const [replyToMessage, setReplyToMessage] = useState(null);
+
 
 
 const handleReply = (message) => {
   setReplyTo(message);
 };
+const handleInputChange = (e) => {
+  setMessagesPerUser((prev) => ({
+    ...prev,
+    [selectedUser.uid]: e.target.value,
+  }));
+};
+
 
 
 const handleFileUpload = (e) => {
@@ -100,17 +108,11 @@ const handleTouchEnd = (event) => {
 };
 
   // Function to handle right-click
-  const handleRightClick = (event, msg) => {
-    event.preventDefault(); // Prevent default right-click menu
-  
-    if (msg.senderId !== user.uid) return; // Only allow options for the user's own messages
-  
-    setContextMenu({
-      x: event.clientX,
-      y: event.clientY,
-      message: msg,
-    });
+  const handleRightClick = (e, msg) => {
+    e.preventDefault(); // stop default right-click menu
+    handleReply(msg);   // call the reply function
   };
+  
   
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
@@ -164,41 +166,44 @@ const handleEditMessage = (msg) => {
   };
   // Function to send or update a message
   const handleSendOrUpdateMessage = async () => {
-    if (!message.trim()) return;
-
+    const currentMessage = messagesPerUser[selectedUser.id]?.trim();
+    if (!currentMessage) return;
+  
     if (editMessage) {
-        if (!editMessage.id) {
-            console.error("Error: No valid message to edit");
-            return;
-        }
-
-        await updateDoc(doc(db, "messages", editMessage.id), {
-            message,
-            edited: true, // ✅ Add this field to mark the message as edited
-        });
-
-        // ✅ Keep the message in its original position by updating the local state without sorting
-        setMessages((prevMessages) =>
-            prevMessages.map((msg) =>
-                msg.id === editMessage.id ? { ...msg, message, edited: true } : msg
-            )
-        );
-
-        setEditMessage(null);
+      if (!editMessage.id) return;
+  
+      await updateDoc(doc(db, "messages", editMessage.id), {
+        message: currentMessage,
+        edited: true,
+      });
+  
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === editMessage.id ? { ...msg, message: currentMessage, edited: true } : msg
+        )
+      );
+  
+      setEditMessage(null);
     } else {
-        await addDoc(collection(db, "messages"), {
-            senderId: user.uid,
-            receiverId: selectedUser.id,
-            message,
-            timestamp: new Date(),
-            edited: false, // ✅ New messages are not edited
-        });
+      await addDoc(collection(db, "messages"), {
+        senderId: user.uid,
+        receiverId: selectedUser.id,
+        message: currentMessage,
+        timestamp: new Date(),
+        edited: false,
+        replyTo: replyToMessage?.message || null, // 👈 Add this line
+      });
     }
-
-    setMessage("");
-    setReplyToMessage(null); // ✅ clear reply after sending
-};
-
+  
+    // ✅ Clear input for current user
+    setMessagesPerUser((prev) => ({
+      ...prev,
+      [selectedUser.id]: "",
+    }));
+  
+    setReplyToMessage(null);
+  };
+  
 
 
   // Close context menu when clicking outside
@@ -779,21 +784,26 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 {messages.map((msg) => (
   <div
     key={msg.id}
-    onContextMenu={(e) => handleRightClick(e, msg)}
+    onContextMenu={(e) => {
+  e.preventDefault(); // prevent default context menu
+  handleReply(msg);   // set reply
+}}
+
     onTouchStart={(e) => {
-      e.target.startX = e.touches[0].clientX;
-      handleTouchStart(e, msg); // existing long press support
+      touchStartX.current = e.touches[0].clientX;
     }}
+    
     onTouchEnd={(e) => {
       const endX = e.changedTouches[0].clientX;
-      const startX = e.target.startX || 0;
-
-      if (startX - endX > 50) {
-        handleReply(msg); // ✅ swipe to reply
+      const deltaX = touchStartX.current - endX;
+    
+      if (deltaX > 50) {
+        handleReply(msg); // swipe left
       } else {
-        handleTouchEnd(e); // keep long press working
+        handleTouchEnd(e); // fallback for long press
       }
     }}
+    
     style={{
       padding: "10px",
       margin: "5px",
@@ -817,8 +827,13 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
           paddingLeft: "6px",
         }}
       >
-        Replying to: <i>{msg.replyTo}</i>
+    Replying to: {
+  messages.find((m) => m.id === msg.replyTo)?.message || "Message"
+}
+
       </div>
+
+      
     )}
     {/* 💬 Actual message content */}
     {msg.message}
@@ -905,6 +920,41 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
 
 
+{replyToMessage && (
+  <div
+    style={{
+      position: "relative",
+      background: "#f1f1f1",
+      borderLeft: "4px solid #007bff",
+      padding: "8px 12px",
+      margin: "5px 10px 0",
+      borderRadius: "10px",
+      color: "#333",
+      maxWidth: "90%",
+    }}
+  >
+    <div style={{ fontSize: "14px", marginBottom: "4px" }}>
+      Replying to: <i>{replyToMessage.message}</i>
+    </div>
+    <button
+      onClick={() => setReplyToMessage(null)}
+      style={{
+        position: "absolute",
+        right: "10px",
+        top: "8px",
+        background: "transparent",
+        border: "none",
+        color: "#007bff",
+        fontSize: "14px",
+        cursor: "pointer",
+      }}
+    >
+      ✕
+    </button>
+  </div>
+)}
+
+
   {/* Fixed Input Section */}
      {selectedUser && (
   <div
@@ -922,6 +972,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       width: "100%",
       boxSizing: "border-box",
        position: "relative", // Required for send button absolute positioning
+       border : '2px solid red'
     }}
   >
     {showEmojiPicker && (
@@ -959,30 +1010,36 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
         width: "100%",
       }}
     >
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); // Prevents newline if using textarea
-            handleSendOrUpdateMessage();
-          }
-        }}
-        placeholder="Type a message..."
-        style={{
-          width: "100%",
-          background: "white",
-          paddingLeft: "60px",
-          paddingRight: "60px",
-          paddingTop: "10px",
-          paddingBottom: "10px",
-          borderRadius: "10px",
-          border: "1px solid #ccc",
-          fontSize: window.innerWidth <= 768 ? "16px" : "14px",
-          outline: "none",
-        }}
-      />
+    <input
+  type="text"
+  value={messagesPerUser[selectedUser?.id] || ""}
+  onChange={(e) =>
+    setMessagesPerUser((prev) => ({
+      ...prev,
+      [selectedUser.id]: e.target.value,
+    }))
+  }
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendOrUpdateMessage();
+    }
+  }}
+  placeholder="Type a message..."
+  style={{
+    width: "100%",
+    background: "white",
+    paddingLeft: "60px",
+    paddingRight: "60px",
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    fontSize: window.innerWidth <= 768 ? "16px" : "14px",
+    outline: "none",
+  }}
+/>
+
 
 
 
