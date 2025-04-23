@@ -956,7 +956,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
 
   {/* Fixed Input Section */}
-     {selectedUser && (
+  {/* Fixed Input Section */}
+  {selectedUser && (
   <div
     style={{
       display: "flex",
@@ -967,15 +968,14 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       bottom: 0,
       background: "#303A40",
       zIndex: 10,
-      marginBottom: "10px",
+      marginBottom: "0px",
       flexWrap: "nowrap",
       width: "100%",
       boxSizing: "border-box",
-       position: "relative", // Required for send button absolute positioning here
-       border : '2px solid red'
+       position: "relative", // Required for send button absolute positioning
     }}
   >
-    {/* {showEmojiPicker && (
+    {showEmojiPicker && (
       <div
         ref={emojiPickerRef}
         style={{
@@ -1000,7 +1000,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
           }}
         />
       </div>
-    )} */}
+    )}
 
 
     <div
@@ -1010,7 +1010,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
         width: "100%",
       }}
     >
-    {/* <input
+    <input
   type="text"
   value={messagesPerUser[selectedUser?.id] || ""}
   onChange={(e) =>
@@ -1038,13 +1038,13 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     fontSize: window.innerWidth <= 768 ? "16px" : "14px",
     outline: "none",
   }}
-/> */}
+/>
 
 
 
 
       {/* Emoji icon (left inside input) */}
-      {/* <button
+      <button
         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
         style={{
           position: "absolute",
@@ -1060,10 +1060,10 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
         }}
       >
         <FontAwesomeIcon icon={faSmile} />
-      </button> */}
+      </button>
  
  {/* 📎 Paperclip Icon for File Upload (Left side of input) */}
-{/* <label
+<label
   htmlFor="fileUpload"
   style={{
     position: "absolute",
@@ -1085,14 +1085,14 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     multiple
     onChange={handleFileUpload}
   />
-</label> */}
+</label>
 
 
 
 
 
       {/* Send button (right inside input) */}
-      {/* <button
+      <button
         onClick={handleSendOrUpdateMessage}
         style={{
           position: "absolute",
@@ -1112,7 +1112,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
          style={{
           transform: "rotate(38deg)", // 👈 Perfect Telegram-style angle
         }}/>
-      </button> */}
+      </button>
     </div>
    
 
@@ -1125,6 +1125,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   //   </div>
   // </div>
 )} 
+
+
 
   </div>
     </div>
