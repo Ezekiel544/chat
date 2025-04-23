@@ -971,7 +971,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       flexWrap: "nowrap",
       width: "100%",
       boxSizing: "border-box",
-       position: "relative", // Required for send button absolute positioning
+       position: "relative", // Required for send button absolute positioning here
        border : '2px solid red'
     }}
   >
