@@ -708,7 +708,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
    flexDirection: "column",
   //  border : '2px solid blue',
   //  paddingBottom : '100px' ,
-  // marginBottom : '80px' ,
+  marginBottom : '80px' ,
    paddingBottom: isKeyboardOpen ? "300px" : "80px",
  }}
 >
@@ -965,7 +965,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       alignItems: "center",
       padding: "10px",
       // borderTop: "1px solid #ccc",
-      // position: "fixed",
+      position: "fixed",
       bottom: 0,
       background: "#303A40",
       zIndex: 10,
@@ -974,8 +974,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       width: "100%",
       boxSizing: "border-box",
       //  position: "relative",
-      // marginTop: '100px' ,
-      // border : '2px solid red'
+      marginTop: '100px' ,
+      border : '2px solid'
     }}
   >
     {showEmojiPicker && (
