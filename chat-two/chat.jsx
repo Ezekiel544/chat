@@ -93,6 +93,7 @@ useEffect(() => {
     if (window.innerWidth > 768) return; // Only for small screens
 
     let timer = setTimeout(() => {
+      console.log("Long press triggered:", msg); // 🔍
         setContextMenu({
             x: event.touches[0].clientX,
             y: event.touches[0].clientY,
@@ -108,9 +109,14 @@ const handleTouchEnd = (event) => {
 };
 
   // Function to handle right-click
-  const handleRightClick = (e, msg) => {
-    e.preventDefault(); // stop default right-click menu
-    handleReply(msg);   // call the reply function
+  const handleRightClick = (e, message) => {
+    e.preventDefault();
+    console.log("Right click detected on:", message); // 🔍
+    setContextMenu({
+      x: e.pageX,
+      y: e.pageY,
+      message,
+    });
   };
   
   
@@ -159,11 +165,16 @@ const handleDeleteMessage = (msg) => {
 
 
   // Function to handle editing a message
-const handleEditMessage = (msg) => {
-    setEditMessage(msg);
-    setMessage(msg.message); // Set input box with the message text
+  const handleEditMessage = (msg) => {
+    console.log("Editing message:", msg);
+    setEditMessage(msg); // Track the message being edited
+    setMessagesPerUser((prev) => ({
+      ...prev,
+      [selectedUser.id]: msg.message, // <-- ✅ update input value
+    }));
     setContextMenu(null);
   };
+  
   // Function to send or update a message
   const handleSendOrUpdateMessage = async () => {
     const currentMessage = messagesPerUser[selectedUser.id]?.trim();
@@ -787,13 +798,21 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   <div
     key={msg.id}
     onContextMenu={(e) => {
-  e.preventDefault(); // prevent default context menu
-  handleReply(msg);   // set reply
-}}
+      e.preventDefault();
+      setContextMenu({
+        x: e.pageX,
+        y: e.pageY,
+        message: msg,
+      });
+    }}
+    
+    
 
     onTouchStart={(e) => {
       touchStartX.current = e.touches[0].clientX;
+      handleTouchStart(e, msg); // <-- this is what was missing
     }}
+    
     
     onTouchEnd={(e) => {
       const endX = e.changedTouches[0].clientX;
@@ -892,7 +911,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     />
 )}
 
-{contextMenu && (
+{contextMenu && contextMenu.message.senderId === user.uid && (
   <div
     style={{
       position: "absolute",
@@ -907,18 +926,20 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
   >
     <p
       style={{ cursor: "pointer" }}
-      onClick={() => handleEditMessage(contextMenu.message)} // Edit option
+      onClick={() => handleEditMessage(contextMenu.message)}
     >
       Edit
     </p>
     <p
       style={{ cursor: "pointer" }}
-      onClick={() => handleDeleteMessage(contextMenu.message)} // Delete option
+      onClick={() => handleDeleteMessage(contextMenu.message)}
     >
       Delete
     </p>
   </div>
 )}
+
+
 
 
 
@@ -981,7 +1002,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     }}
 
   >
-    {/* {showEmojiPicker && (
+    {showEmojiPicker && (
       <div
         ref={emojiPickerRef}
         style={{
@@ -1001,12 +1022,16 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       >
         <EmojiPicker
           onEmojiClick={(emoji) => {
-            setMessage((prev) => prev + emoji.emoji);
+            setMessagesPerUser((prev) => ({
+              ...prev,
+              [selectedUser.id]: (prev[selectedUser.id] || "") + emoji.emoji,
+            }));
+            
             setShowEmojiPicker(false);
           }}
         />
       </div>
-    )} */}
+    )}
 
 
 
