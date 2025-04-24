@@ -524,9 +524,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     height: "100vh",
     width: "100%",
     flexDirection: "column" ,
-    // background:  "#008080 #3F3F4F #8A2BE2 #48D1CC #F0F8FF #E0E0E0 #D8BFD8 #182024 #2F4F4F #5F9EA0 #8b674d  #c15f2e #375A5A", 
-    // background:  " #8A2BE2", 
     background: chatBackground,
+    gap : '0px'
     
   }}
 >
@@ -707,8 +706,10 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
    padding: "10px",
    display: "flex",
    flexDirection: "column",
-  //  border : '2px solid red',
-   paddingBottom: isKeyboardOpen ? "300px" : "80px", // Enough room for keyboard/input
+  //  border : '2px solid blue',
+  //  paddingBottom : '100px' ,
+  marginBottom : '80px' ,
+   paddingBottom: isKeyboardOpen ? "300px" : "80px",
  }}
 >
   {!selectedUser && !isMobile && (
@@ -722,6 +723,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       color: "#888",
       textAlign: "center",
       padding: "20px",
+
     }}
   >
     Select a user to start chatting
@@ -971,7 +973,8 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       flexWrap: "nowrap",
       width: "100%",
       boxSizing: "border-box",
-      //  position: "relative", 
+      //  position: "relative",
+      marginTop: '100px' 
     }}
   >
     {showEmojiPicker && (
