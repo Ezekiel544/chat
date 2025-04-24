@@ -967,17 +967,21 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       // borderTop: "1px solid #ccc",
       position: "fixed",
       bottom: 0,
+      right : "0px",
       background: "#303A40",
       zIndex: 10,
       marginBottom: "0px",
       flexWrap: "nowrap",
       width: "100%",
       boxSizing: "border-box",
-      //  position: "relative",
       marginTop: '100px' ,
+      left: window.innerWidth <= 768 ? "0px" : "320px",
+      width: window.innerWidth <= 768 ? "100%" : "calc(100% - 320px)",
+
     }}
+
   >
-    {showEmojiPicker && (
+    {/* {showEmojiPicker && (
       <div
         ref={emojiPickerRef}
         style={{
@@ -1002,10 +1006,11 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
           }}
         />
       </div>
-    )}
+    )} */}
 
 
-    <div
+
+<div
       style={{
         position: "relative",
         flex: 1,
@@ -1118,9 +1123,6 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
         }}/>
       </button>
     </div>
-   
-
-
 
 
       {/* Send button (right inside input) */}
