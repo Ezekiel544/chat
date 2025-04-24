@@ -975,7 +975,6 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       boxSizing: "border-box",
       //  position: "relative",
       marginTop: '100px' ,
-      border : '2px solid'
     }}
   >
     {showEmojiPicker && (
