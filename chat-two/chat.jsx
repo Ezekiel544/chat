@@ -956,7 +956,6 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
 
   {/* Fixed Input Section */}
-  {/* Fixed Input Section */}
   {selectedUser && (
   <div
     style={{
@@ -972,7 +971,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
       flexWrap: "nowrap",
       width: "100%",
       boxSizing: "border-box",
-       position: "relative", // Required for send button absolute positioning
+      //  position: "relative", 
     }}
   >
     {showEmojiPicker && (
@@ -1037,6 +1036,7 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
     border: "1px solid #ccc",
     fontSize: window.innerWidth <= 768 ? "16px" : "14px",
     outline: "none",
+    boxSizing: "border-box", // 👈 CRITICAL
   }}
 />
 
