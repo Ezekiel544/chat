@@ -642,7 +642,12 @@ const DeleteConfirmationModal = ({ message, onConfirm, onCancel }) => {
 
   {/* Icons section */}
   {selectedUser && (
-    <div style={{ display: "flex", alignItems: "center", gap: window.innerWidth <= 768 ? "14px" : "30px", paddingRight:window.innerWidth <= 768 ? "14px" : "0px",}}>
+    <div style={{ display: "flex", alignItems: "center",gap: window.innerWidth <= 368
+      ? "16px"
+      : window.innerWidth <= 768
+      ? "20px"
+      : "30px"
+    , paddingRight:window.innerWidth <= 768 ? "14px" : "0px",}}>
       <FontAwesomeIcon icon={faVideo} style={{ cursor: "pointer" , fontSize: "15px"  }} title="Video Call" />
       <FontAwesomeIcon icon={faPhone} style={{ cursor: "pointer" , fontSize: "15px" }} title="Voice Call" />
       <span style={{ position: "relative" }}>
